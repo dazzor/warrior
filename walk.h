@@ -4,6 +4,12 @@
 // Image Size     : 576x256 pixels
 // Memory usage   : 294912 bytes
 
+//int walk_up[9][4096];     //{0, 1, 2, 3, 4, 5, 6, 7, 8};
+//int walk_left[9][4096];   //{9, 10, 11, 12, 13, 14, 15, 16, 17};
+//int walk_down[9][4096];   //{18, 19, 20, 21, 22, 23, 24, 25, 26};
+//int walk_right[9][4096];  //{27, 28, 29, 30, 31, 32, 33, 34, 35};
+
+unsigned short knight[4096];
 const int screenWidth = 320;
 const int screenHeight = 240;
 const int sheetWidth = 576;
@@ -13,6 +19,10 @@ const int warriorHeight = 64;
 const int framesPerRow = sheetWidth / warriorWidth;  // 9 frames per row
 const int totalRows = sheetHeight / warriorHeight;   // 4 rows total
 const int totalFrames = framesPerRow * totalRows;  // 36 frames total
+
+int_fast16_t wX = 0; // warrior X
+int_fast16_t wY = 0; // warrior Y
+int_fast16_t w = 27; // walk direction frame
 
 const unsigned short walking[147456] PROGMEM={
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   // 0x0010 (16) pixels
@@ -9232,3 +9242,16 @@ const unsigned short walking[147456] PROGMEM={
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   // 0x23FF0 (147440) pixels
 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,   // 0x24000 (147456) pixels
 };
+
+void drawFrame(int frameIndex) {
+  int frameX = (frameIndex % framesPerRow) * warriorWidth; 
+  int frameY = (frameIndex / framesPerRow) * warriorHeight;
+  int arryIndex = 0;
+  for (int y = 0; y < warriorHeight; y++) {
+    for (int x = 0; x < warriorWidth; x++) {
+      int sheetIndex = (frameY + y) * sheetWidth + (frameX + x);
+      knight[arryIndex] = walking[sheetIndex];
+      arryIndex++;
+    }
+  }
+}
